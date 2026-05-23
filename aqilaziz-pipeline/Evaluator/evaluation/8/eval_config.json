@@ -1,0 +1,45 @@
+{
+  "evalConfig": {
+    "modelSpecs": [
+      {
+        "signatureName": "serving_default",
+        "labelKey": "good_quality",
+        "predictionKey": "outputs"
+      }
+    ],
+    "slicingSpecs": [
+      {}
+    ],
+    "metricsSpecs": [
+      {
+        "metrics": [
+          {
+            "className": "BinaryAccuracy",
+            "threshold": {
+              "valueThreshold": {
+                "lowerBound": 0.65
+              }
+            }
+          },
+          {
+            "className": "AUC",
+            "threshold": {
+              "valueThreshold": {
+                "lowerBound": 0.7
+              }
+            }
+          }
+        ],
+        "modelNames": [
+          ""
+        ]
+      }
+    ]
+  },
+  "version": "0.46.0",
+  "dataLocation": "<user provided PCollection>",
+  "fileFormat": "<unknown>",
+  "modelLocations": {
+    "": "/mnt/d/App/PR/dicoding-mlops-aqilaziz/aqilaziz-pipeline/Trainer/model/6/Format-Serving"
+  }
+}

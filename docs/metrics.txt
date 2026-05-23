@@ -1,0 +1,9 @@
+# HELP wine_quality_prediction_requests_total Total prediction requests handled by the demo web app.
+# TYPE wine_quality_prediction_requests_total counter
+wine_quality_prediction_requests_total{model="wine-quality",environment="github-pages"} 12
+# HELP wine_quality_model_auc Last evaluated AUC from the TFX Evaluator artifact.
+# TYPE wine_quality_model_auc gauge
+wine_quality_model_auc{model="wine-quality"} 0.853
+# HELP wine_quality_model_binary_accuracy Last evaluated binary accuracy from the TFX Evaluator artifact.
+# TYPE wine_quality_model_binary_accuracy gauge
+wine_quality_model_binary_accuracy{model="wine-quality"} 0.778

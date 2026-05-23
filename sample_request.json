@@ -1,0 +1,10 @@
+{
+  "signature_name": "serving_default",
+  "instances": [
+    {
+      "examples": {
+        "b64": "Cg0KC2ZpeGVkX2FjaWRpdHkSAhAB"
+      }
+    }
+  ]
+}
