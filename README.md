@@ -43,6 +43,10 @@ Demo cloud untuk mengakses sistem tersedia di:
 
 https://aqilaziz.github.io/dicoding-mlops-aqilaziz-final/
 
+Repository proyek:
+
+https://github.com/aqilaziz/dicoding-mlops-aqilaziz-final
+
 Docker serving command:
 
 ```bash
@@ -94,6 +98,7 @@ https://aqilaziz.github.io/dicoding-mlops-aqilaziz-final/metrics.txt
 |   |-- prometheus.config
 |-- aqilaziz-pipeline.ipynb
 |-- aqilaziz-testing.ipynb
+|-- aqilaziz-deployment.png
 |-- Dockerfile
 |-- README.md
 |-- requirements.txt
