@@ -8,7 +8,7 @@ Target utama:
 
 File penting:
 
-- `prometheus.yml`: konfigurasi Prometheus untuk scrape endpoint TF Serving di Render.
+- `prometheus.yml`: konfigurasi Prometheus untuk scrape endpoint TF Serving di Railway.
 - `prometheus.config`: konfigurasi monitoring yang digunakan TensorFlow Serving.
 - `aqilaziz-monitoring.png`: bukti Prometheus UI dengan target TF Serving berstatus UP.
 

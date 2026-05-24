@@ -10,4 +10,4 @@ scrape_configs:
     metrics_path: /monitoring/prometheus/metrics
     static_configs:
       - targets:
-          - aqilaziz-wine-quality-tf-serving.onrender.com
+          - aqilaziz-wine-quality-tf-serving-production.up.railway.app

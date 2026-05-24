@@ -35,14 +35,14 @@ Komponen pipeline:
 
 Model yang telah lulus validasi tersedia pada `aqilaziz-pipeline/serving_model`.
 
-## Deployment Render
+## Deployment Railway
 
-Direktori ini menyertakan `Dockerfile` untuk menjalankan model dengan TensorFlow Serving pada Render. Deployment dilakukan sebagai Docker Web Service, sehingga endpoint TensorFlow Serving dapat diakses secara publik melalui URL Render.
+Direktori ini menyertakan `Dockerfile` untuk menjalankan model dengan TensorFlow Serving pada Railway. Deployment dilakukan sebagai Docker Web Service, sehingga endpoint TensorFlow Serving dapat diakses secara publik melalui URL Railway.
 
 Endpoint cloud TensorFlow Serving:
 
 ```text
-https://aqilaziz-wine-quality-tf-serving.onrender.com
+https://aqilaziz-wine-quality-tf-serving-production.up.railway.app
 GET  /v1/models/wine-quality
 POST /v1/models/wine-quality:predict
 GET  /monitoring/prometheus/metrics
@@ -51,7 +51,7 @@ GET  /monitoring/prometheus/metrics
 Prometheus dashboard:
 
 ```text
-https://aqilaziz-wine-quality-prometheus.onrender.com/targets
+https://aqilaziz-wine-quality-prometheus-production.up.railway.app/targets
 ```
 
 Repository proyek:
@@ -74,7 +74,7 @@ GET  /monitoring/prometheus/metrics
 
 ## Monitoring
 
-Prometheus dikonfigurasi pada direktori `monitoring`. Direktori ini memuat `prometheus.yml`, `prometheus.config`, `Dockerfile`, dan screenshot monitoring. Target Prometheus diarahkan ke endpoint TF Serving di Render, bukan ke `localhost`.
+Prometheus dikonfigurasi pada direktori `monitoring`. Direktori ini memuat `prometheus.yml`, `prometheus.config`, `Dockerfile`, dan screenshot monitoring. Target Prometheus diarahkan ke endpoint TF Serving di Railway, bukan ke `localhost`.
 
 ```bash
 docker build -t aqilaziz-wine-monitoring monitoring
@@ -90,7 +90,7 @@ docker run --rm -p 9090:9090 aqilaziz-wine-monitoring
 |   |-- winequality-red.csv
 |-- data_source/
 |   |-- winequality-red-raw.csv
-|-- docs/                       # Demo statis yang memanggil endpoint TF Serving Render
+|-- docs/                       # Demo statis yang memanggil endpoint TF Serving Railway
 |-- modules/
 |   |-- wine_transform.py
 |   |-- wine_trainer.py

@@ -152,7 +152,7 @@
       <header>
         <div>
           <h1>Wine Quality Predictor</h1>
-          <p>Demo cloud untuk model klasifikasi kualitas red wine dari pipeline TFX aqilaziz. Prediksi dikirim ke endpoint TensorFlow Serving di Render.</p>
+          <p>Demo cloud untuk model klasifikasi kualitas red wine dari pipeline TFX aqilaziz. Prediksi dikirim ke endpoint TensorFlow Serving di Railway.</p>
         </div>
         <div class="status"><span class="dot"></span> Cloud demo active</div>
       </header>
@@ -182,8 +182,8 @@
           <dl>
             <dt>Evaluator accuracy</dt><dd>0.778</dd>
             <dt>Evaluator AUC</dt><dd>0.853</dd>
-            <dt>TF Serving</dt><dd><a href="https://aqilaziz-wine-quality-tf-serving.onrender.com/v1/models/wine-quality">model metadata</a></dd>
-            <dt>Metrics endpoint</dt><dd><a href="https://aqilaziz-wine-quality-tf-serving.onrender.com/monitoring/prometheus/metrics">Prometheus metrics</a></dd>
+            <dt>TF Serving</dt><dd><a href="https://aqilaziz-wine-quality-tf-serving-production.up.railway.app/v1/models/wine-quality">model metadata</a></dd>
+            <dt>Metrics endpoint</dt><dd><a href="https://aqilaziz-wine-quality-tf-serving-production.up.railway.app/monitoring/prometheus/metrics">Prometheus metrics</a></dd>
             <dt>Model source</dt><dd>TFX Pusher artifact</dd>
           </dl>
         </section>
@@ -205,7 +205,7 @@
         "alcohol"
       ];
 
-      const TF_SERVING_URL = "https://aqilaziz-wine-quality-tf-serving.onrender.com";
+      const TF_SERVING_URL = "https://aqilaziz-wine-quality-tf-serving-production.up.railway.app";
 
       function value(id) {
         return Number(document.getElementById(id).value || 0);
