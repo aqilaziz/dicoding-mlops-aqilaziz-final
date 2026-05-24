@@ -5,7 +5,12 @@ Direktori ini memuat konfigurasi Prometheus untuk memantau sistem machine learni
 Target utama:
 
 - `wine-quality-tf-serving`: endpoint metrik TensorFlow Serving pada `/monitoring/prometheus/metrics`.
-- `wine-quality-demo-cloud`: metrik demo cloud statis pada GitHub Pages.
+
+File penting:
+
+- `prometheus.yml`: konfigurasi Prometheus untuk scrape endpoint TF Serving di Render.
+- `prometheus.config`: konfigurasi monitoring yang digunakan TensorFlow Serving.
+- `aqilaziz-monitoring.png`: bukti Prometheus UI dengan target TF Serving berstatus UP.
 
 Jalankan Prometheus:
 

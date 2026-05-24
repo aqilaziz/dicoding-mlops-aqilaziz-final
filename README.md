@@ -35,13 +35,24 @@ Komponen pipeline:
 
 Model yang telah lulus validasi tersedia pada `aqilaziz-pipeline/serving_model`.
 
-## Deployment
+## Deployment Render
 
-Direktori ini menyertakan `Dockerfile` untuk menjalankan model dengan TensorFlow Serving. Konfigurasi ini dapat digunakan pada Railway, Heroku container stack, Cloud Run, atau platform cloud lain yang mendukung Docker.
+Direktori ini menyertakan `Dockerfile` untuk menjalankan model dengan TensorFlow Serving pada Render. Deployment dilakukan sebagai Docker Web Service, sehingga endpoint TensorFlow Serving dapat diakses secara publik melalui URL Render.
 
-Demo cloud untuk mengakses sistem tersedia di:
+Endpoint cloud TensorFlow Serving:
 
-https://aqilaziz.github.io/dicoding-mlops-aqilaziz-final/
+```text
+https://aqilaziz-wine-quality-tf-serving.onrender.com
+GET  /v1/models/wine-quality
+POST /v1/models/wine-quality:predict
+GET  /monitoring/prometheus/metrics
+```
+
+Prometheus dashboard:
+
+```text
+https://aqilaziz-wine-quality-prometheus.onrender.com/targets
+```
 
 Repository proyek:
 
@@ -51,7 +62,7 @@ Docker serving command:
 
 ```bash
 docker build -t aqilaziz-wine-serving .
-docker run --rm -p 8501:8501 aqilaziz-wine-serving
+docker run --rm -e PORT=8501 -p 8501:8501 aqilaziz-wine-serving
 ```
 
 Endpoint TensorFlow Serving:
@@ -63,16 +74,12 @@ GET  /monitoring/prometheus/metrics
 
 ## Monitoring
 
-Prometheus dikonfigurasi pada direktori `monitoring`. Konfigurasi memuat target TensorFlow Serving dan endpoint metrik cloud demo.
+Prometheus dikonfigurasi pada direktori `monitoring`. Direktori ini memuat `prometheus.yml`, `prometheus.config`, `Dockerfile`, dan screenshot monitoring. Target Prometheus diarahkan ke endpoint TF Serving di Render, bukan ke `localhost`.
 
 ```bash
 docker build -t aqilaziz-wine-monitoring monitoring
 docker run --rm -p 9090:9090 aqilaziz-wine-monitoring
 ```
-
-Endpoint metrik demo:
-
-https://aqilaziz.github.io/dicoding-mlops-aqilaziz-final/metrics.txt
 
 ## Struktur Proyek
 
@@ -83,19 +90,18 @@ https://aqilaziz.github.io/dicoding-mlops-aqilaziz-final/metrics.txt
 |   |-- winequality-red.csv
 |-- data_source/
 |   |-- winequality-red-raw.csv
-|-- docs/                       # Demo cloud GitHub Pages
+|-- docs/                       # Demo statis yang memanggil endpoint TF Serving Render
 |-- modules/
 |   |-- wine_transform.py
 |   |-- wine_trainer.py
 |-- monitoring/
 |   |-- Dockerfile
+|   |-- prometheus.config
 |   |-- prometheus.yml
 |   |-- README.md
 |-- scripts/
 |   |-- create_notebook.py
 |   |-- prepare_data.py
-|-- serving/
-|   |-- prometheus.config
 |-- aqilaziz-pipeline.ipynb
 |-- aqilaziz-testing.ipynb
 |-- aqilaziz-deployment.png
@@ -116,6 +122,8 @@ python scripts/prepare_data.py
 jupyter nbconvert --to notebook --execute aqilaziz-pipeline.ipynb --output aqilaziz-pipeline.ipynb
 ```
 
-## Catatan
+## Bukti Pengujian
 
-Railway pada akun yang tersedia menunjukkan status trial expired, sehingga deployment Docker disiapkan sebagai konfigurasi cloud-ready. Demo cloud GitHub Pages digunakan sebagai web app publik untuk mengakses model demo dan endpoint monitoring statis.
+- `aqilaziz-testing.ipynb` mengirimkan request prediksi ke endpoint cloud TF Serving menggunakan serialized `tf.train.Example` yang di-encode base64.
+- `aqilaziz-deployment.png` menampilkan respons JSON dari endpoint cloud TF Serving.
+- `monitoring/aqilaziz-monitoring.png` menampilkan Prometheus UI dengan target TF Serving berstatus UP.

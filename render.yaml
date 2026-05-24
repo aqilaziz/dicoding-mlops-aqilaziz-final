@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: aqilaziz-wine-quality-tf-serving
+    runtime: docker
+    plan: free
+    repo: https://github.com/aqilaziz/dicoding-mlops-aqilaziz-final
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /v1/models/wine-quality
+    autoDeployTrigger: commit
+
+  - type: web
+    name: aqilaziz-wine-quality-prometheus
+    runtime: docker
+    plan: free
+    repo: https://github.com/aqilaziz/dicoding-mlops-aqilaziz-final
+    branch: main
+    dockerfilePath: ./monitoring/Dockerfile
+    dockerContext: ./monitoring
+    healthCheckPath: /-/healthy
+    autoDeployTrigger: commit

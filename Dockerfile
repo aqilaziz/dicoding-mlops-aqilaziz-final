@@ -4,7 +4,7 @@ ENV MODEL_NAME=wine-quality
 ENV REST_PORT=8501
 
 COPY aqilaziz-pipeline/serving_model /models/wine-quality
-COPY serving/prometheus.config /models/monitoring/prometheus.config
+COPY monitoring/prometheus.config /models/monitoring/prometheus.config
 
 EXPOSE 8501
 

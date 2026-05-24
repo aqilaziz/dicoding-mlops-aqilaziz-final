@@ -1,17 +1,13 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  external_labels:
+    monitor: "tf-serving-monitor"
 
 scrape_configs:
   - job_name: wine-quality-tf-serving
+    scheme: https
     metrics_path: /monitoring/prometheus/metrics
     static_configs:
       - targets:
-          - localhost:8501
-
-  - job_name: wine-quality-demo-cloud
-    scheme: https
-    metrics_path: /dicoding-mlops-aqilaziz-final/metrics.txt
-    static_configs:
-      - targets:
-          - aqilaziz.github.io
+          - aqilaziz-wine-quality-tf-serving.onrender.com

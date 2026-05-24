@@ -152,7 +152,7 @@
       <header>
         <div>
           <h1>Wine Quality Predictor</h1>
-          <p>Demo cloud untuk model klasifikasi kualitas red wine dari pipeline TFX aqilaziz.</p>
+          <p>Demo cloud untuk model klasifikasi kualitas red wine dari pipeline TFX aqilaziz. Prediksi dikirim ke endpoint TensorFlow Serving di Render.</p>
         </div>
         <div class="status"><span class="dot"></span> Cloud demo active</div>
       </header>
@@ -182,7 +182,8 @@
           <dl>
             <dt>Evaluator accuracy</dt><dd>0.778</dd>
             <dt>Evaluator AUC</dt><dd>0.853</dd>
-            <dt>Metrics endpoint</dt><dd><a href="metrics.txt">metrics.txt</a></dd>
+            <dt>TF Serving</dt><dd><a href="https://aqilaziz-wine-quality-tf-serving.onrender.com/v1/models/wine-quality">model metadata</a></dd>
+            <dt>Metrics endpoint</dt><dd><a href="https://aqilaziz-wine-quality-tf-serving.onrender.com/monitoring/prometheus/metrics">Prometheus metrics</a></dd>
             <dt>Model source</dt><dd>TFX Pusher artifact</dd>
           </dl>
         </section>
@@ -204,37 +205,89 @@
         "alcohol"
       ];
 
+      const TF_SERVING_URL = "https://aqilaziz-wine-quality-tf-serving.onrender.com";
+
       function value(id) {
         return Number(document.getElementById(id).value || 0);
       }
 
-      function sigmoid(x) {
-        return 1 / (1 + Math.exp(-x));
+      function varint(n) {
+        const bytes = [];
+        while (n > 127) {
+          bytes.push((n & 127) | 128);
+          n >>= 7;
+        }
+        bytes.push(n);
+        return bytes;
       }
 
-      function predict() {
-        const alcohol = value("alcohol");
-        const volatileAcidity = value("volatile_acidity");
-        const sulphates = value("sulphates");
-        const citricAcid = value("citric_acid");
-        const chlorides = value("chlorides");
-        const density = value("density");
-        const totalSulfur = value("total_sulfur_dioxide");
+      function tag(field, wireType) {
+        return varint((field << 3) | wireType);
+      }
 
-        const logit =
-          -4.2 +
-          0.62 * (alcohol - 10.2) -
-          2.4 * (volatileAcidity - 0.52) +
-          1.7 * (sulphates - 0.65) +
-          0.9 * (citricAcid - 0.27) -
-          8.0 * (chlorides - 0.087) -
-          7.5 * (density - 0.9967) -
-          0.006 * (totalSulfur - 46.5);
+      function lengthDelimited(field, bytes) {
+        return [...tag(field, 2), ...varint(bytes.length), ...bytes];
+      }
 
-        const probability = sigmoid(logit);
-        document.getElementById("score").textContent = probability.toFixed(2);
-        document.getElementById("label").textContent =
-          probability >= 0.5 ? "Good quality" : "Needs review";
+      function utf8(text) {
+        return [...new TextEncoder().encode(text)];
+      }
+
+      function float32(field, number) {
+        const buffer = new ArrayBuffer(4);
+        new DataView(buffer).setFloat32(0, Number(number), true);
+        return [...tag(field, 5), ...new Uint8Array(buffer)];
+      }
+
+      function floatFeature(number) {
+        const floatList = float32(1, number);
+        return lengthDelimited(2, floatList);
+      }
+
+      function featureEntry(name, number) {
+        return [
+          ...lengthDelimited(1, utf8(name)),
+          ...lengthDelimited(2, floatFeature(number))
+        ];
+      }
+
+      function tfExampleBase64(values) {
+        const entries = [];
+        for (const name of fields) {
+          entries.push(...lengthDelimited(1, featureEntry(name, values[name])));
+        }
+        const example = lengthDelimited(1, entries);
+        let binary = "";
+        for (const byte of example) binary += String.fromCharCode(byte);
+        return btoa(binary);
+      }
+
+      async function predict() {
+        const values = Object.fromEntries(fields.map((field) => [field, value(field)]));
+        const payload = {
+          instances: [{ examples: { b64: tfExampleBase64(values) } }]
+        };
+        document.getElementById("label").textContent = "Calling TF Serving";
+        document.getElementById("score").textContent = "...";
+
+        try {
+          const response = await fetch(`${TF_SERVING_URL}/v1/models/wine-quality:predict`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json();
+          const raw = result.predictions?.[0]?.outputs?.[0] ?? result.predictions?.[0]?.[0] ?? result.predictions?.[0] ?? 0;
+          const probability = Number(raw);
+          document.getElementById("score").textContent = probability.toFixed(2);
+          document.getElementById("label").textContent =
+            probability >= 0.5 ? "Good quality" : "Needs review";
+        } catch (error) {
+          document.getElementById("score").textContent = "API";
+          document.getElementById("label").textContent = "Use notebook test";
+          document.getElementById("explain").textContent =
+            "Browser CORS may block direct calls; aqilaziz-testing.ipynb posts the same payload to TensorFlow Serving.";
+        }
       }
 
       document.getElementById("predict").addEventListener("click", predict);
