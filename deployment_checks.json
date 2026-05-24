@@ -1,0 +1,9 @@
+{
+  "tf_serving_url": "https://aqilaziz-wine-quality-tf-serving-production.up.railway.app",
+  "prometheus_url": "https://aqilaziz-wine-quality-prometheus-production.up.railway.app",
+  "metadata_status": 200,
+  "metadata_body": "{\n \"model_version_status\": [\n  {\n   \"version\": \"1779557757\",\n   \"state\": \"AVAILABLE\",\n   \"status\": {\n    \"error_code\": \"OK\",\n    \"error_message\": \"\"\n   }\n  }\n ]\n}\n",
+  "prediction_status": 200,
+  "prediction_body": "{\n    \"predictions\": [[0.230599642]\n    ]\n}",
+  "metrics_status": 200
+}
